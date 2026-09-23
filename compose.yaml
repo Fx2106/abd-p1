@@ -1,0 +1,70 @@
+# Infraestructura de la asignatura. Un servicio por tema.
+#
+#   docker compose up -d mongo          # tema 2 y prácticas 1-2
+#   docker compose up -d redis          # tema 3 y práctica 3
+#   docker compose up -d neo4j          # tema 4 y práctica 4
+#   docker compose up -d qdrant         # tema 5
+#   docker compose down -v              # parar y borrar los datos
+#
+# Los puertos se publican SOLO en 127.0.0.1. Con la forma corta "27017:27017"
+# Docker escucha en 0.0.0.0, y como Mongo y Redis van sin autenticación
+# cualquiera en la misma red —la wifi del aula— podría conectarse a la base de
+# un compañero y borrarla. Compass, VS Code, RedisInsight y las pruebas siguen
+# funcionando igual: todos conectan por localhost.
+
+name: abd
+
+services:
+  mongo:
+    image: mongo:8
+    ports: ["127.0.0.1:27017:27017"]
+    volumes: ["mongo-data:/data/db"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7.4
+    ports: ["127.0.0.1:6379:6379"]
+    # maxmemory y la política de desalojo se configuran en clase con CONFIG SET,
+    # que es justamente lo que pide la práctica 3.
+    command: ["redis-server", "--save", "60", "1", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  neo4j:
+    image: neo4j:5.26
+    ports: ["127.0.0.1:7474:7474", "127.0.0.1:7687:7687"]
+    environment:
+      NEO4J_AUTH: neo4j/abd-local-2026
+      NEO4J_PLUGINS: '["apoc","graph-data-science"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*,gds.*
+    volumes: ["neo4j-data:/data"]
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "abd-local-2026", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+
+  # Qdrant sustituye a Chroma desde el curso 26-27. La diferencia que importa
+  # en clase: Qdrant NO tiene modo embebido, siempre es un servidor. El
+  # cuaderno del tema 5 se conecta a http://localhost:6333, así que este
+  # servicio hay que levantarlo antes de abrirlo.
+  #   6333 → API REST y panel web en http://localhost:6333/dashboard
+  #   6334 → gRPC, que es lo que usa el cliente de Python si se le pide
+  # Sin healthcheck a propósito: la imagen no trae curl ni wget, y una sonda
+  # que siempre falla deja el contenedor marcado como unhealthy sin motivo.
+  qdrant:
+    image: qdrant/qdrant:v1.19
+    ports: ["127.0.0.1:6333:6333", "127.0.0.1:6334:6334"]
+    volumes: ["qdrant-data:/qdrant/storage"]
+
+volumes:
+  mongo-data:
+  neo4j-data:
+  qdrant-data:
