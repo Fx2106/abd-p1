@@ -1,5 +1,5 @@
 __author__ = 'Pablo Ramos Criado'
-__students__ = 'Nombres_y_Apellidos'
+__students__ = 'Santiago Martín Bardera y Quanwg Wang'
 
 
 from geopy.geocoders import Nominatim
@@ -109,7 +109,28 @@ class Model:
         #TODO
         # Realizar las comprabociones y gestiones necesarias
         # antes de la asignacion.
+        self._modified_vars = set()
 
+        received_vars = set(kwargs.keys())
+
+        allowed_vars = self._required_vars | self._admissible_vars | {"_id"}
+
+        if self._location_var is not None:
+            allowed_vars.add(f"{self._location_var}_loc")
+
+        missing_vars = self._required_vars - received_vars
+
+        if missing_vars:
+            raise ValueError(
+                f"Faltan atributos requeridos: {', '.join(sorted(missing_vars))}"
+            )
+
+        invalid_vars = received_vars - allowed_vars
+
+        if invalid_vars:
+            raise ValueError(
+                f"Atributos no admitidos: {', '.join(sorted(invalid_vars))}"
+            )
         # Asigna todos los valores en kwargs a las atributos con 
         # nombre las claves en kwargs
         # Utilizamos el atributo data para guardar los variables 
@@ -127,6 +148,12 @@ class Model:
             super().__setattr__(name, value)
             return
         #TODO
+        allowed_vars = self._required_vars | self._admissible_vars
+
+        if name not in allowed_vars:
+            raise ValueError(f"Atributo no admitido: {name}")
+
+        self._modified_vars.add(name)
         # Realizar las comprabociones y gestiones necesarias
         # antes de la asignacion.
 
@@ -146,15 +173,57 @@ class Model:
             raise AttributeError
         
     def save(self) -> None:
-        """
-        Guarda el modelo en la base de datos
-        Si el modelo no existe en la base de datos, se crea un nuevo
-        documento con los valores del modelo. En caso contrario, se
-        actualiza el documento existente con los nuevos valores del
-        modelo.
-        """
-        #TODO
-        pass #No olvidar eliminar esta linea una vez implementado
+
+        # Documento nuevo
+        if "_id" not in self._data:
+
+            document = self._data.copy()
+
+            if (
+                self._location_var is not None
+                and self._location_var in document
+            ):
+                location_field = f"{self._location_var}_loc"
+                document[location_field] = getLocationPoint(
+                    document[self._location_var]
+                )
+
+            result = self._db.insert_one(document)
+
+            self._data.update(document)
+            self._data["_id"] = result.inserted_id
+
+            self._modified_vars.clear()
+            return
+
+        # Documento ya existente
+        if not self._modified_vars:
+            return
+
+        modified_data = {
+            field: self._data[field]
+            for field in self._modified_vars
+        }
+
+        if (
+            self._location_var is not None
+            and self._location_var in self._modified_vars
+        ):
+            location_field = f"{self._location_var}_loc"
+
+            location_point = getLocationPoint(
+                self._data[self._location_var]
+            )
+
+            modified_data[location_field] = location_point
+            self._data[location_field] = location_point
+
+        self._db.update_one(
+            {"_id": self._data["_id"]},
+            {"$set": modified_data}
+        )
+
+        self._modified_vars.clear()
 
     def delete(self) -> None:
         """
@@ -243,6 +312,27 @@ class Model:
         cls._db = db_collection
         cls._required_vars = required_vars
         cls._admissible_vars = admissible_vars
+        cls._location_var = None
+
+        for field, index_type in indexes.items():
+
+            if index_type == "unique":
+                cls._db.create_index(
+                    [(field, pymongo.ASCENDING)],
+                    unique=True
+                )
+
+            elif index_type == "asc":
+                cls._db.create_index(
+                    [(field, pymongo.ASCENDING)]
+                )
+
+            elif index_type == "geosphere":
+                cls._location_var = field
+
+                cls._db.create_index(
+                    [(f"{field}_loc", pymongo.GEOSPHERE)]
+                )
         # TODO
         # Recorrer indexes y crear cada índice segun su tipo: 'unique', 'asc'
         # y 'geosphere'. Comparar el tipo por igualdad, no con el operador 'in'.
@@ -297,37 +387,40 @@ class ModelCursor:
         pass #No olvidar eliminar esta linea una vez implementado
 
 
-def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://localhost:27017/", db_name="abd", scope=globals()) -> None:
-    """ 
-    Declara las clases que heredan de Model para cada uno de los 
-    modelos de las colecciones definidas en definitions_path.
-    Inicializa las clases de los modelos proporcionando los indices y 
-    atributos admitidos y requeridos para cada una de ellas y la conexión a la
-    collecion de la base de datos.
-    
-    Parameters
-    ----------
-        definitions_path : str
-            ruta al fichero de definiciones de modelos
-        mongodb_uri : str
-            uri de conexion a la base de datos
-        db_name : str
-            nombre de la base de datos
-    """
-    #TODO
-    # Inicializar base de datos
+def initApp(definitions_path: str = "./models.yml",mongodb_uri="mongodb://localhost:27017/",db_name="abd",scope=globals()) -> None:
 
-    #TODO
-    # Declarar tantas clases modelo colecciones existan en la base de datos
-    # Leer el fichero de definiciones de modelos para obtener las colecciones,
-    # indices y los atributos admitidos y requeridos para cada una de ellas.
-    # Ejemplo de declaracion de modelo para colecion llamada MiModelo
-    scope["MiModelo"] = type("MiModelo", (Model,),{})
-    # La clase se declara en tiempo de ejecucion y queda en scope, que no tiene
-    # por que ser el espacio de nombres global: las pruebas le pasan su propio
-    # diccionario. Por eso se inicializa a traves de scope y no por su nombre,
-    # que ahi todavia no existe.
-    scope["MiModelo"].init_class(db_collection=None, indexes=None, required_vars=None, admissible_vars=None)
+    # Conexión a MongoDB
+    client = MongoClient(mongodb_uri)
+    db = client[db_name]
+
+    # Leer las definiciones del YAML
+    with open(definitions_path, "r", encoding="utf-8") as file:
+        definitions = yaml.safe_load(file)
+
+    # Crear dinámicamente una clase por cada modelo del YAML
+    for model_name, definition in definitions.items():
+
+        required_vars = set(definition.get("required_vars", []))
+        admissible_vars = set(definition.get("admissible_vars", []))
+
+        indexes = {}
+
+        for field in definition.get("unique_indexes", []):
+            indexes[field] = "unique"
+
+        for field in definition.get("regular_indexes", []):
+            indexes[field] = "asc"
+
+        location = definition.get("location_index")
+
+        if location is not None:
+            indexes[location] = "geosphere"
+
+        # Crear clase dinámicamente
+        scope[model_name] = type(model_name, (Model,), {})
+
+        # Inicializarla
+        scope[model_name].init_class(db_collection=db[model_name],indexes=indexes,required_vars=required_vars,admissible_vars=admissible_vars)
 
 if __name__ == '__main__':
     
