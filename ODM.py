@@ -14,40 +14,26 @@ from bson.objectid import ObjectId
 import yaml
 
 def getLocationPoint(address: str) -> Point:
-    """ 
-    Obtiene las coordenadas de una dirección en formato geojson.Point
-    Utilizar la API de geopy para obtener las coordenadas de la direccion
-    Cuidado, la API es publica tiene limite de peticiones, utilizar sleeps.
-
-    Parameters
-    ----------
-        address : str
-            direccion completa de la que obtener las coordenadas
-    Returns
-    -------
-        geojson.Point
-            coordenadas del punto de la direccion
-    """
     location = None
     intentos = 0
     maxIntentos = 5
+
+    geolocator = Nominatim(user_agent="abd-practica1")
+
     while location is None and intentos < maxIntentos:
         intentos += 1
+
         try:
             time.sleep(1)
-            #TODO
-            # Es necesario proporcionar un user_agent para utilizar la API
-            # Utilizar un nombre aleatorio para el user_agent
-            location = Nominatim(user_agent="Mi-Nombre-Aleatorio").geocode(address)
+            location = geolocator.geocode(address)
+
         except GeocoderTimedOut:
-            # Puede lanzar una excepcion si se supera el tiempo de espera
-            # Volver a intentarlo
             continue
-    #TODO
-    # Devolver un GeoJSON de tipo punto con la latitud y longitud almacenadas.
-    # Si no se consiguieron coordenadas, lanzar ValueError: la funcion no puede
-    # devolver un punto inventado ni None silenciosamente. Es lo que espera la
-    # prueba test_get_location_point_timeout_failure.
+
+    if location is None:
+        raise ValueError("No se pudieron obtener coordenadas")
+
+    return Point((location.longitude, location.latitude))
 
 class Model:
     """ 
@@ -226,31 +212,21 @@ class Model:
         self._modified_vars.clear()
 
     def delete(self) -> None:
-        """
-        Elimina el modelo de la base de datos
-        """
-        #TODO
-        pass
+
+        if "_id" not in self._data:
+            return
+
+        self._db.delete_one(
+            {"_id": self._data["_id"]}
+        )
+
+        del self._data["_id"]
+        self._modified_vars.clear()
     
     @classmethod
     def find(cls, filter: dict[str, str | dict]) -> Any:
-        """ 
-        Utiliza el metodo find de pymongo para realizar una consulta
-        de lectura en la BBDD.
-        find debe devolver un cursor de modelos ModelCursor
-
-        Parameters
-        ----------
-            filter : dict[str, str | dict]
-                diccionario con el criterio de busqueda de la consulta
-        Returns
-        -------
-            ModelCursor
-                cursor de modelos
-        """ 
-        #TODO
-        # cls es el puntero a la clase
-        pass #No olvidar eliminar esta linea una vez implementado
+        cursor = cls._db.find(filter)
+        return ModelCursor(cls, cursor)
 
     @classmethod
     def aggregate(cls, pipeline: list[dict]) -> pymongo.command_cursor.CommandCursor:
@@ -376,15 +352,13 @@ class ModelCursor:
         self.cursor = cursor
     
     def __iter__(self) -> Generator:
-        """
-        Devuelve un iterador que recorre los elementos del cursor
-        y devuelve los documentos en forma de objetos modelo.
-        Utilizar yield para generar el iterador
-        Utilizar la funcion next para obtener el siguiente documento del cursor
-        Utilizar alive para comprobar si existen mas documentos.
-        """
-        #TODO
-        pass #No olvidar eliminar esta linea una vez implementado
+        while self.cursor.alive:
+            try:
+                document = next(self.cursor)
+            except StopIteration:
+                break
+
+            yield self.model(**document)
 
 
 def initApp(definitions_path: str = "./models.yml",mongodb_uri="mongodb://localhost:27017/",db_name="abd",scope=globals()) -> None:
