@@ -1,0 +1,116 @@
+[
+  {
+    "_id": {
+      "$oid": "6acbc595beaad08fb7e8ed4a"
+    },
+    "nombre": "Lucia Fernandez",
+    "email": "lucia@example.com",
+    "fecha_alta": "2020-01-12",
+    "direccion": "Puerta del Sol, Madrid, Spain",
+    "preferencias_genero": [
+      "pop",
+      "flamenco"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        -3.703876,
+        40.416863
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc596beaad08fb7e8ed4b"
+    },
+    "nombre": "Mario Gomez",
+    "email": "mario@example.com",
+    "fecha_alta": "2021-05-04",
+    "direccion": "Placa de Catalunya, Barcelona, Spain",
+    "preferencias_genero": [
+      "indie rock"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        2.170757,
+        41.387492
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc598beaad08fb7e8ed4c"
+    },
+    "nombre": "Sara Lopez",
+    "email": "sara@example.com",
+    "fecha_alta": "2022-08-30",
+    "direccion": "Plaza Nueva, Bilbao, Spain",
+    "preferencias_genero": [
+      "pop rock"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        -2.922689,
+        43.259014
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc598beaad08fb7e8ed4d"
+    },
+    "nombre": "Pablo Ruiz",
+    "email": "pablo@example.com",
+    "fecha_alta": "2023-02-18",
+    "preferencias_genero": [
+      "regueton"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc598beaad08fb7e8ed4e"
+    },
+    "nombre": "Elena Martin",
+    "email": "elena@example.com",
+    "fecha_alta": "2023-11-09",
+    "preferencias_genero": [
+      "pop"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc598beaad08fb7e8ed4f"
+    },
+    "nombre": "Diego Torres",
+    "email": "diego@example.com",
+    "fecha_alta": "2024-04-22",
+    "preferencias_genero": [
+      "indie rock",
+      "pop rock"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc598beaad08fb7e8ed50"
+    },
+    "nombre": "Carmen Vega",
+    "email": "carmen@example.com",
+    "fecha_alta": "2025-01-15",
+    "preferencias_genero": [
+      "flamenco"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc598beaad08fb7e8ed51"
+    },
+    "nombre": "Hugo Martin",
+    "email": "hugo@example.com",
+    "fecha_alta": "2025-09-03",
+    "preferencias_genero": [
+      "dancehall"
+    ]
+  }
+]

@@ -1,0 +1,120 @@
+[
+  {
+    "_id": {
+      "$oid": "6acbc58fbeaad08fb7e8ed33"
+    },
+    "nombre": "Movistar Arena",
+    "direccion": "Movistar Arena, Madrid, Spain",
+    "aforo": 17453,
+    "zonas": {
+      "pista": 5500,
+      "grada": 11953
+    },
+    "servicios": [
+      "bar",
+      "accesibilidad",
+      "guardarropa"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        -3.671788,
+        40.423862
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc590beaad08fb7e8ed34"
+    },
+    "nombre": "Palau Sant Jordi",
+    "direccion": "Palau Sant Jordi, Barcelona, Spain",
+    "aforo": 17960,
+    "zonas": {
+      "pista": 6000,
+      "grada": 11960
+    },
+    "servicios": [
+      "bar",
+      "accesibilidad",
+      "parking"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        2.152568,
+        41.363467
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc592beaad08fb7e8ed35"
+    },
+    "nombre": "Bilbao Arena",
+    "direccion": "Bilbao Arena, Bilbao, Spain",
+    "aforo": 10014,
+    "zonas": {
+      "pista": 3000,
+      "grada": 7014
+    },
+    "servicios": [
+      "bar",
+      "accesibilidad"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        -2.926044,
+        43.252217
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc593beaad08fb7e8ed36"
+    },
+    "nombre": "Auditorio Alfredo Kraus",
+    "direccion": "Auditorio Alfredo Kraus, Las Palmas de Gran Canaria, Spain",
+    "aforo": 1656,
+    "zonas": {
+      "platea": 800,
+      "anfiteatro": 856
+    },
+    "servicios": [
+      "accesibilidad",
+      "guardarropa"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        -15.449014,
+        28.130213
+      ]
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed37"
+    },
+    "nombre": "Estadio Santiago Bernabeu",
+    "direccion": "Estadio Santiago Bernabeu, Madrid, Spain",
+    "aforo": 83186,
+    "zonas": {
+      "pista": 25000,
+      "grada": 58186
+    },
+    "servicios": [
+      "bar",
+      "accesibilidad",
+      "parking"
+    ],
+    "direccion_loc": {
+      "type": "Point",
+      "coordinates": [
+        -3.688197,
+        40.453044
+      ]
+    }
+  }
+]

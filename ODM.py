@@ -18,7 +18,10 @@ def getLocationPoint(address: str) -> Point:
     intentos = 0
     maxIntentos = 5
 
-    geolocator = Nominatim(user_agent="abd-practica1")
+    geolocator = Nominatim(
+    user_agent="abd-practical",
+    timeout=10
+    )   
 
     while location is None and intentos < maxIntentos:
         intentos += 1
@@ -397,35 +400,77 @@ def initApp(definitions_path: str = "./models.yml",mongodb_uri="mongodb://localh
         scope[model_name].init_class(db_collection=db[model_name],indexes=indexes,required_vars=required_vars,admissible_vars=admissible_vars)
 
 if __name__ == '__main__':
-    
-    # Inicializar base de datos y modelos con initApp
-    #TODO
-    initApp()
+    modelos = {}
+    initApp(scope=modelos)
 
-    #Ejemplo
-    m = MiModelo(nombre="Pablo", apellido="Ramos", edad=18)
-    m.save()
-    m.nombre="Pedro"
-    print(m.nombre)
+    Artista = modelos["artista"]
+    nombre = "__prueba_odm_main__"
 
-    # Hacer pruebas para comprobar que funciona correctamente el modelo
-    #TODO
-    # Crear modelo
+    # Limpiar posibles restos de ejecuciones anteriores.
+    Artista._db.delete_many({"nombre": nombre})
 
-    # Asignar nuevo valor a variable admitida del objeto 
+    try:
+        # 1. Comprobar que se rechazan campos obligatorios ausentes.
+        try:
+            Artista(nombre=nombre)
+        except ValueError:
+            print("OK: validación de campos obligatorios")
+        else:
+            raise AssertionError(
+                "Se ha aceptado un artista incompleto"
+            )
 
-    # Asignar nuevo valor a variable no admitida del objeto 
+        # 2. Comprobar que se rechazan campos no admitidos.
+        try:
+            Artista(
+                nombre=nombre,
+                pais_origen="España",
+                anio_inicio=2020,
+                color="rojo",
+            )
+        except ValueError:
+            print("OK: validación de campos admitidos")
+        else:
+            raise AssertionError(
+                "Se ha aceptado un atributo no admitido"
+            )
 
-    # Guardar
+        # 3. Insertar un documento.
+        artista = Artista(
+            nombre=nombre,
+            pais_origen="España",
+            anio_inicio=2020,
+            generos=["pop"],
+        )
+        artista.save()
 
-    # Asignar nuevo valor a variable admitida del objeto
+        documento = Artista._db.find_one({"nombre": nombre})
+        assert documento is not None
+        print("OK: inserción")
 
-    # Guardar
+        # 4. Modificar solo un campo.
+        artista.pais_origen = "Portugal"
+        artista.save()
 
-    # Buscar nuevo documento con find
+        documento = Artista._db.find_one({"nombre": nombre})
+        assert documento["pais_origen"] == "Portugal"
+        assert documento["anio_inicio"] == 2020
+        assert documento["generos"] == ["pop"]
+        print("OK: actualización parcial")
 
-    # Obtener primer documento
+        # 5. Consultar y comprobar el tipo de objeto.
+        resultados = list(Artista.find({"nombre": nombre}))
+        assert len(resultados) == 1
+        assert isinstance(resultados[0], Artista)
+        print("OK: consulta con find")
 
-    # Modificar valor de variable admitida
+        # 6. Eliminar el documento.
+        artista.delete()
+        assert Artista._db.find_one({"nombre": nombre}) is None
+        print("OK: borrado")
 
-    # Guardar
+    finally:
+        # No dejar documentos de prueba en la base de datos.
+        Artista._db.delete_many({"nombre": nombre})
+
+    print("Todas las comprobaciones han terminado correctamente.")

@@ -1,0 +1,176 @@
+[
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed40"
+    },
+    "titulo": "Gira de Alejandro Sanz",
+    "artistas": [
+      "Alejandro Sanz"
+    ],
+    "recinto": "Movistar Arena",
+    "fecha": "2018-06-14",
+    "hora": "21:00",
+    "precios_zona": {
+      "pista": 70,
+      "grada": 55
+    },
+    "entradas_vendidas": 12000
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed41"
+    },
+    "titulo": "Concierto de Amaral",
+    "artistas": [
+      "Amaral"
+    ],
+    "recinto": "Palau Sant Jordi",
+    "fecha": "2019-10-03",
+    "hora": "20:30",
+    "precios_zona": {
+      "pista": 50,
+      "grada": 35
+    },
+    "entradas_vendidas": 8500
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed42"
+    },
+    "titulo": "Invierno Indie",
+    "artistas": [
+      "Vetusta Morla",
+      "Dani Martin"
+    ],
+    "recinto": "Bilbao Arena",
+    "fecha": "2020-02-15",
+    "hora": "20:00",
+    "precios_zona": {
+      "pista": 40,
+      "grada": 30
+    },
+    "entradas_vendidas": 8000
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed43"
+    },
+    "titulo": "Pop en Canarias",
+    "artistas": [
+      "Aitana"
+    ],
+    "recinto": "Auditorio Alfredo Kraus",
+    "fecha": "2021-09-05",
+    "hora": "19:30",
+    "precios_zona": {
+      "platea": 45,
+      "anfiteatro": 30
+    },
+    "entradas_vendidas": 1200
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed44"
+    },
+    "titulo": "Rosalia en Madrid",
+    "artistas": [
+      "Rosalia"
+    ],
+    "recinto": "Movistar Arena",
+    "fecha": "2022-07-18",
+    "hora": "21:00",
+    "precios_zona": {
+      "pista": 85,
+      "grada": 65
+    },
+    "entradas_vendidas": 16000
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed45"
+    },
+    "titulo": "Noches de Barcelona",
+    "artistas": [
+      "Bad Gyal"
+    ],
+    "recinto": "Palau Sant Jordi",
+    "fecha": "2023-03-16",
+    "hora": "21:30",
+    "precios_zona": {
+      "pista": 55,
+      "grada": 40
+    },
+    "entradas_vendidas": 14500
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed46"
+    },
+    "titulo": "Coldplay en Madrid",
+    "artistas": [
+      "Coldplay"
+    ],
+    "recinto": "Estadio Santiago Bernabeu",
+    "fecha": "2024-06-20",
+    "hora": "21:00",
+    "precios_zona": {
+      "pista": 110,
+      "grada": 80
+    },
+    "entradas_vendidas": 78000
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed47"
+    },
+    "titulo": "Musica en Bilbao",
+    "artistas": [
+      "Vetusta Morla",
+      "Amaral"
+    ],
+    "recinto": "Bilbao Arena",
+    "fecha": "2025-05-09",
+    "hora": "20:00",
+    "precios_zona": {
+      "pista": 45,
+      "grada": 35
+    },
+    "entradas_vendidas": 9500
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed48"
+    },
+    "titulo": "EnVivo Summer",
+    "artistas": [
+      "Coldplay",
+      "Aitana"
+    ],
+    "recinto": "Estadio Santiago Bernabeu",
+    "fecha": "2026-06-22",
+    "hora": "21:00",
+    "precios_zona": {
+      "pista": 120,
+      "grada": 90
+    },
+    "entradas_vendidas": 72000
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed49"
+    },
+    "titulo": "Cierre de Gira",
+    "artistas": [
+      "Alejandro Sanz",
+      "Rosalia"
+    ],
+    "recinto": "Palau Sant Jordi",
+    "fecha": "2026-09-18",
+    "hora": "20:30",
+    "precios_zona": {
+      "pista": 75,
+      "grada": 55
+    },
+    "entradas_vendidas": 17000
+  }
+]

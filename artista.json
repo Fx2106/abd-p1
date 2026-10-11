@@ -1,0 +1,94 @@
+[
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed38"
+    },
+    "nombre": "Rosalia",
+    "pais_origen": "España",
+    "anio_inicio": 2013,
+    "generos": [
+      "pop",
+      "flamenco"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed39"
+    },
+    "nombre": "Alejandro Sanz",
+    "pais_origen": "España",
+    "anio_inicio": 1988,
+    "generos": [
+      "pop",
+      "flamenco"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed3a"
+    },
+    "nombre": "Aitana",
+    "pais_origen": "España",
+    "anio_inicio": 2017,
+    "generos": [
+      "pop"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed3b"
+    },
+    "nombre": "Vetusta Morla",
+    "pais_origen": "España",
+    "anio_inicio": 1998,
+    "generos": [
+      "indie rock"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed3c"
+    },
+    "nombre": "Amaral",
+    "pais_origen": "España",
+    "anio_inicio": 1997,
+    "generos": [
+      "pop rock"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed3d"
+    },
+    "nombre": "Bad Gyal",
+    "pais_origen": "España",
+    "anio_inicio": 2016,
+    "generos": [
+      "dancehall",
+      "regueton"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed3e"
+    },
+    "nombre": "Coldplay",
+    "pais_origen": "Reino Unido",
+    "anio_inicio": 1997,
+    "generos": [
+      "pop rock",
+      "alternative rock"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6acbc594beaad08fb7e8ed3f"
+    },
+    "nombre": "Dani Martin",
+    "pais_origen": "España",
+    "anio_inicio": 2000,
+    "generos": [
+      "pop rock"
+    ]
+  }
+]
